@@ -2,12 +2,12 @@ package users_postgres_repository
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 
 	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
 	core_errors "github.com/Donal-Noye/golang-todoapp/internal/core/errors"
+	core_postgres_pool "github.com/Donal-Noye/golang-todoapp/internal/core/repository/postgres/pool"
 )
 
 func (r *UsersRepository) GetUser(
@@ -34,7 +34,7 @@ func (r *UsersRepository) GetUser(
 		&userModel.PhoneNumber,
 	)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, core_postgres_pool.ErrNoRows) {
 			return domain.User{}, fmt.Errorf(
 				"user with id='%d': %w",
 				id,
