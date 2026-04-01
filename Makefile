@@ -16,7 +16,7 @@ env-port-forward:
 	@docker compose up -d port-forwarder
 
 env-port-close:
-	@docker compose down -d port-forwarder
+	@docker compose down port-forwarder
 
 migrate-create:
 	@docker compose run --rm todoapp-postgres-migrate create -ext sql -dir /migrations -seq $(seq)
@@ -41,3 +41,9 @@ migrate-force:
 db-reset:
 	docker compose down -v
 	docker compose up -d todoapp-postgres
+
+todoapp-run:
+	@export LOGGER_FOLDER=./out/logs && \
+	export POSTGRES_HOST=localhost && \
+	go mod tidy && \
+	go run cmd/todoapp/main.go
