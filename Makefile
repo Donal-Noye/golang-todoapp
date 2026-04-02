@@ -42,6 +42,9 @@ db-reset:
 	docker compose down -v
 	docker compose up -d todoapp-postgres
 
+logs-cleanup:
+	@bash logs-cleanup.sh
+
 todoapp-run:
 	@export LOGGER_FOLDER=./out/logs && \
 	export POSTGRES_HOST=localhost && \
