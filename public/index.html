@@ -1419,8 +1419,11 @@
 
 // ─── State ───────────────────────────────────────────────
 const _host = window.location.hostname;
-const _isLocal = _host === "localhost" || _host === "http://127.0.0.1" || _host === "";
-let API_BASE = _isLocal ? 'http://127.0.0.1:5050/api/v1' : `${window.location.protocol}//${_host}/api/v1`;
+const _isLocal = _host === "localhost" || _host === "127.0.0.1";
+
+const API_BASE = _isLocal
+    ? 'http://127.0.0.1:5050/api/v1'
+    : `${window.location.protocol}//${_host}:5050/api/v1`;
 let _taskEditing = false;
 let _taskId      = null;
 let _userEditing = false;
