@@ -3,7 +3,6 @@ package users_transport_http
 import (
 	"net/http"
 
-	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
 	core_logger "github.com/Donal-Noye/golang-todoapp/internal/core/logger"
 	core_http_request "github.com/Donal-Noye/golang-todoapp/internal/core/transport/http/request"
 	core_http_response "github.com/Donal-Noye/golang-todoapp/internal/core/transport/http/response"
@@ -39,9 +38,11 @@ func (h *UsersHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userDomain := domainFromDTO(request)
-
-	userDomain, err := h.usersService.CreateUser(ctx, userDomain)
+	userDomain, err := h.usersService.CreateUser(
+		ctx,
+		request.FullName,
+		request.PhoneNumber,
+	)
 	if err != nil {
 		responseHandler.ErrorResponse(err, "failed to create user")
 
@@ -51,8 +52,4 @@ func (h *UsersHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 	response := CreateUserResponse(userDTOFromDomain(userDomain))
 
 	responseHandler.JSONResponse(response, http.StatusCreated)
-}
-
-func domainFromDTO(dto CreateUserRequest) domain.User {
-	return domain.NewUserUninitialized(dto.FullName, dto.PhoneNumber)
 }

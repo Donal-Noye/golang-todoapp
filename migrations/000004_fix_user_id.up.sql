@@ -1,0 +1,3 @@
+ALTER TABLE todoapp.users ALTER COLUMN id SET UUID;
+ALTER TABLE todoapp.tasks ALTER COLUMN id SET UUID;
+ALTER TABLE todoapp.tasks ALTER COLUMN author_user_id SET UUID;

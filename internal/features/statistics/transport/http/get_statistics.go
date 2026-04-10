@@ -9,6 +9,7 @@ import (
 	core_logger "github.com/Donal-Noye/golang-todoapp/internal/core/logger"
 	core_http_request "github.com/Donal-Noye/golang-todoapp/internal/core/transport/http/request"
 	core_http_response "github.com/Donal-Noye/golang-todoapp/internal/core/transport/http/response"
+	"github.com/google/uuid"
 )
 
 type GetStatisticsResponse struct {
@@ -75,14 +76,14 @@ func toDTOFromDomain(statistics domain.Statistics) GetStatisticsResponse {
 	}
 }
 
-func getUserIDFromToQueryParams(r *http.Request) (*int, *time.Time, *time.Time, error) {
+func getUserIDFromToQueryParams(r *http.Request) (*uuid.UUID, *time.Time, *time.Time, error) {
 	const (
 		userIDQueryParamKey = "user_id"
 		fromQueryParamKey   = "from"
 		toQueryParamKey     = "to"
 	)
 
-	userID, err := core_http_request.GetIntQueryParam(r, userIDQueryParamKey)
+	userID, err := core_http_request.GetUUIDQueryParam(r, userIDQueryParamKey)
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("get 'user_id' query param: %w", err)
 	}

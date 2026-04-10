@@ -7,11 +7,12 @@ import (
 
 	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
 	core_errors "github.com/Donal-Noye/golang-todoapp/internal/core/errors"
+	"github.com/google/uuid"
 )
 
 func (s *StatisticsService) GetStatistics(
 	ctx context.Context,
-	userId *int,
+	userId *uuid.UUID,
 	from *time.Time,
 	to *time.Time,
 ) (domain.Statistics, error) {

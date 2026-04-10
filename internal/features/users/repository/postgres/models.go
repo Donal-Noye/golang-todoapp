@@ -1,25 +1,42 @@
 package users_postgres_repository
 
-import "github.com/Donal-Noye/golang-todoapp/internal/core/domain"
+import (
+	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
+	core_postgres_pool "github.com/Donal-Noye/golang-todoapp/internal/core/repository/postgres/pool"
+	"github.com/google/uuid"
+)
 
 type UserModel struct {
-	ID          int
+	ID          uuid.UUID
 	Version     int
 	FullName    string
 	PhoneNumber *string
 }
 
-func userDomainFromModels(users []UserModel) []domain.User {
-	userDomains := make([]domain.User, len(users))
+func (m *UserModel) Scan(row core_postgres_pool.Row) error {
+	return row.Scan(
+		&m.ID,
+		&m.Version,
+		&m.FullName,
+		&m.PhoneNumber,
+	)
+}
 
-	for i, user := range users {
-		userDomains[i] = domain.NewUser(
-			user.ID,
-			user.Version,
-			user.FullName,
-			user.PhoneNumber,
-		)
+func modelToDomain(model UserModel) domain.User {
+	return domain.NewUser(
+		model.ID,
+		model.Version,
+		model.FullName,
+		model.PhoneNumber,
+	)
+}
+
+func modelsToDomains(models []UserModel) []domain.User {
+	domains := make([]domain.User, len(models))
+
+	for i, model := range models {
+		domains[i] = modelToDomain(model)
 	}
 
-	return userDomains
+	return domains
 }

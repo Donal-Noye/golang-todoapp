@@ -5,9 +5,13 @@ import (
 	"fmt"
 
 	core_errors "github.com/Donal-Noye/golang-todoapp/internal/core/errors"
+	"github.com/google/uuid"
 )
 
-func (r *UsersRepository) DeleteUser(ctx context.Context, id int) error {
+func (r *UsersRepository) DeleteUser(
+	ctx context.Context,
+	id uuid.UUID,
+) error {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 

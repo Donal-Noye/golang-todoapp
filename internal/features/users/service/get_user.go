@@ -5,11 +5,12 @@ import (
 	"fmt"
 
 	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
+	"github.com/google/uuid"
 )
 
 func (s *UsersService) GetUser(
 	ctx context.Context,
-	id int,
+	id uuid.UUID,
 ) (domain.User, error) {
 	user, err := s.usersRepository.GetUser(ctx, id)
 	if err != nil {
