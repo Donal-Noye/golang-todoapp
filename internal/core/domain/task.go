@@ -5,10 +5,11 @@ import (
 	"time"
 
 	core_errors "github.com/Donal-Noye/golang-todoapp/internal/core/errors"
+	"github.com/google/uuid"
 )
 
 type Task struct {
-	ID      int
+	ID      uuid.UUID
 	Version int
 
 	Title       string
@@ -17,18 +18,18 @@ type Task struct {
 	CreatedAt   time.Time
 	CompletedAt *time.Time
 
-	AuthorUserId int
+	AuthorUserId uuid.UUID
 }
 
 func NewTask(
-	id int,
+	id uuid.UUID,
 	version int,
 	title string,
 	description *string,
 	completed bool,
 	createdAt time.Time,
 	completedAt *time.Time,
-	authorUserId int,
+	authorUserId uuid.UUID,
 ) Task {
 	return Task{
 		ID:           id,
@@ -42,19 +43,27 @@ func NewTask(
 	}
 }
 
-func NewTaskUninitialized(
+func CreateTask(
 	title string,
 	description *string,
-	authorUserId int,
+	authorUserId uuid.UUID,
 ) Task {
+	var (
+		id                     = uuid.New()
+		version                = 1
+		completed              = false
+		createdAt              = time.Now()
+		completedAt *time.Time = nil
+	)
+
 	return NewTask(
-		UninitializedId,
-		UninitializedVersion,
+		id,
+		version,
 		title,
 		description,
-		false,
-		time.Now(),
-		nil,
+		completed,
+		createdAt,
+		completedAt,
 		authorUserId,
 	)
 }

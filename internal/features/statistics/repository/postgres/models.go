@@ -4,17 +4,18 @@ import (
 	"time"
 
 	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
+	"github.com/google/uuid"
 )
 
 type TaskModel struct {
-	ID           int
+	ID           uuid.UUID
 	Version      int
 	Title        string
 	Description  *string
 	Completed    bool
 	CreatedAt    time.Time
 	CompletedAt  *time.Time
-	AuthorUserId int
+	AuthorUserId uuid.UUID
 }
 
 func taskDomainFromModel(taskModel TaskModel) domain.Task {

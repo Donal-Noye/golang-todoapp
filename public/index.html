@@ -1642,7 +1642,7 @@ const fmtDateTime = s => {
     if (!s) return '';
     const d = new Date(s);
     return d.toLocaleDateString('en-US', { month:'short', day:'numeric' })
-         + ' ' + d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+        + ' ' + d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
 };
 function fmtAge(from) {
     // How long ago from was, in a compact human-readable form
@@ -1681,11 +1681,11 @@ const AVATAR_GRADS = [
     'linear-gradient(135deg,#d29922,#3fb950)',
 ];
 const avatarGrad = id => {
-       const s = String(id || '');
-       let h = 0;
-       for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-       return AVATAR_GRADS[h % AVATAR_GRADS.length];
-   };
+    const s = String(id || '');
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return AVATAR_GRADS[h % AVATAR_GRADS.length];
+};
 
 function startLoading(id) {
     const cont = document.getElementById(id);
@@ -1855,8 +1855,8 @@ function taskCard(t) {
                     ${fmtDate(t.created_at)}</span>` : ''}
                 <span class="chip ${done ? 'chip-success' : 'chip-pending'}">
                     ${done
-                        ? `✓ Готово${completedDate ? ' · ' + completedDate : ''}`
-                        : `○ В работе${pendingAge ? ' · ' + pendingAge : ''}`}
+        ? `✓ Готово${completedDate ? ' · ' + completedDate : ''}`
+        : `○ В работе${pendingAge ? ' · ' + pendingAge : ''}`}
                 </span>
                 ${duration ? `<span class="chip chip-duration">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1946,7 +1946,7 @@ async function submitTask() {
             closeModal('task-modal-overlay'); loadTasks();
         } catch(e) { toast(e.message, 'error'); }
     } else {
-        const authorId = parseInt(document.getElementById('task-author-id').value.trim(), 10);
+        const authorId = document.getElementById('task-author-id').value.trim();
         if (!authorId) { toast('Author User ID is required', 'error'); return; }
         const body = { title, author_user_id: authorId };
         if (desc) body.description = desc;
@@ -2092,7 +2092,7 @@ async function submitUser() {
 
     try {
         await api(_userEditing ? `/users/${_userId}` : '/users',
-                  { method: _userEditing ? 'PATCH' : 'POST', body: JSON.stringify(body) });
+            { method: _userEditing ? 'PATCH' : 'POST', body: JSON.stringify(body) });
         toast(_userEditing ? 'Пользователь обновлён' : 'Пользователь создан', 'success');
         closeModal('user-modal-overlay'); loadUsers(); refreshUserSelects();
     } catch(e) { toast(e.message, 'error'); }

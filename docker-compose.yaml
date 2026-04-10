@@ -13,6 +13,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_TIMEOUT=${POSTGRES_TIMEOUT}
+      - REDIS_HOST=todoapp-redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DB=0
+      - REDIS_TTL=5m
       - LOGGER_LEVEL=${LOGGER_LEVEL}
       - TIME_ZONE=${TIME_ZONE}
       - LOGGER_FOLDER=/app/out/logs
@@ -38,12 +43,26 @@ services:
     volumes:
       - ./migrations:/migrations
 
+  todoapp-redis:
+    image: redis:8.6.1
+    container_name: todoapp-env-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./out/redis_data:/data
+    restart: always
+
   port-forwarder:
     image: alpine/socat:1.8.0.3
     container_name: todoapp-postgres-port-forwarder
-    command: tcp-listen:5432,fork,reuseaddr tcp-connect:todoapp-postgres:5432
+    entrypoint: |
+      /bin/sh -c "
+        socat -d -d tcp-listen:5432,fork,reuseaddr tcp-connect:todoapp-postgres:5432 &
+        socat -d -d tcp-listen:6379,fork,reuseaddr tcp-connect:todoapp-redis:6379 &
+        wait
+      "
     ports:
       - "127.0.0.1:5432:5432"
+      - "127.0.0.1:6379:6379"
 
   swagger:
     build:

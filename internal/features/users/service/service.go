@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
+	"github.com/google/uuid"
 )
 
 type UsersService struct {
@@ -24,17 +25,16 @@ type UsersRepository interface {
 
 	GetUser(
 		ctx context.Context,
-		id int,
+		id uuid.UUID,
 	) (domain.User, error)
 
 	DeleteUser(
 		ctx context.Context,
-		id int,
+		id uuid.UUID,
 	) error
 
 	PatchUser(
 		ctx context.Context,
-		id int,
 		patch domain.User,
 	) (domain.User, error)
 }

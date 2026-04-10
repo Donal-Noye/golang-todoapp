@@ -12,7 +12,6 @@ import (
 
 func (r *UsersRepository) PatchUser(
 	ctx context.Context,
-	id int,
 	user domain.User,
 ) (domain.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
@@ -37,7 +36,7 @@ func (r *UsersRepository) PatchUser(
 		query,
 		user.FullName,
 		user.PhoneNumber,
-		id,
+		user.ID,
 		user.Version,
 	)
 
@@ -52,7 +51,7 @@ func (r *UsersRepository) PatchUser(
 		if errors.Is(err, core_postgres_pool.ErrNoRows) {
 			return domain.User{}, fmt.Errorf(
 				"user with id='%d' concurrently accessed: %w",
-				id,
+				user.ID,
 				core_errors.ErrConflict,
 			)
 		}
@@ -60,12 +59,7 @@ func (r *UsersRepository) PatchUser(
 		return domain.User{}, fmt.Errorf("scan error: %w", err)
 	}
 
-	userDomain := domain.User{
-		ID:          userModel.ID,
-		FullName:    userModel.FullName,
-		PhoneNumber: userModel.PhoneNumber,
-		Version:     userModel.Version,
-	}
+	userDomain := modelToDomain(userModel)
 
 	return userDomain, nil
 }

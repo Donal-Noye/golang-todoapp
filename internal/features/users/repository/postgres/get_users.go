@@ -16,14 +16,19 @@ func (r *UsersRepository) GetUsers(
 	defer cancel()
 
 	query := `
-		SELECT id, version, full_name, phone_number
-		FROM todoapp.users
-		ORDER BY id ASC
-		LIMIT $1 
-		OFFSET $2;
+	SELECT id, version, full_name, phone_number
+	FROM todoapp.users
+	ORDER BY id ASC
+	LIMIT $1
+	OFFSET $2;
 	`
 
-	rows, err := r.pool.Query(ctx, query, limit, offset)
+	rows, err := r.pool.Query(
+		ctx,
+		query,
+		limit,
+		offset,
+	)
 	if err != nil {
 		return nil, fmt.Errorf("select users: %w", err)
 	}
@@ -32,14 +37,7 @@ func (r *UsersRepository) GetUsers(
 	var userModels []UserModel
 	for rows.Next() {
 		var userModel UserModel
-
-		err := rows.Scan(
-			&userModel.ID,
-			&userModel.Version,
-			&userModel.FullName,
-			&userModel.PhoneNumber,
-		)
-		if err != nil {
+		if err := userModel.Scan(rows); err != nil {
 			return nil, fmt.Errorf("scan users: %w", err)
 		}
 
@@ -49,7 +47,7 @@ func (r *UsersRepository) GetUsers(
 		return nil, fmt.Errorf("next rows: %w", err)
 	}
 
-	userDomains := userDomainFromModels(userModels)
+	userDomains := modelsToDomains(userModels)
 
 	return userDomains, nil
 }

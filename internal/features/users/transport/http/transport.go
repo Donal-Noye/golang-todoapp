@@ -6,6 +6,7 @@ import (
 
 	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
 	core_http_server "github.com/Donal-Noye/golang-todoapp/internal/core/transport/http/server"
+	"github.com/google/uuid"
 )
 
 type UsersHTTPHandler struct {
@@ -15,7 +16,8 @@ type UsersHTTPHandler struct {
 type UsersService interface {
 	CreateUser(
 		ctx context.Context,
-		user domain.User,
+		fullName string,
+		phoneNumber *string,
 	) (domain.User, error)
 
 	GetUsers(
@@ -26,17 +28,17 @@ type UsersService interface {
 
 	GetUser(
 		ctx context.Context,
-		id int,
+		id uuid.UUID,
 	) (domain.User, error)
 
 	DeleteUser(
 		ctx context.Context,
-		id int,
+		id uuid.UUID,
 	) error
 
 	PatchUser(
 		ctx context.Context,
-		id int,
+		id uuid.UUID,
 		patch domain.UserPatch,
 	) (domain.User, error)
 }

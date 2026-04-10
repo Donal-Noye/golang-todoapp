@@ -5,11 +5,12 @@ import (
 	"fmt"
 
 	"github.com/Donal-Noye/golang-todoapp/internal/core/domain"
+	"github.com/google/uuid"
 )
 
 func (s *UsersService) PatchUser(
 	ctx context.Context,
-	id int,
+	id uuid.UUID,
 	patch domain.UserPatch,
 ) (domain.User, error) {
 	user, err := s.usersRepository.GetUser(ctx, id)
@@ -21,7 +22,7 @@ func (s *UsersService) PatchUser(
 		return domain.User{}, fmt.Errorf("apply user patch: %w", err)
 	}
 
-	patchedUser, err := s.usersRepository.PatchUser(ctx, id, user)
+	patchedUser, err := s.usersRepository.PatchUser(ctx, user)
 	if err != nil {
 		return domain.User{}, fmt.Errorf("patch user: %w", err)
 	}

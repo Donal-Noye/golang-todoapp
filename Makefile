@@ -2,10 +2,10 @@ include .env
 export
 
 env-up:
-	@docker compose up -d todoapp-postgres
+	@docker compose up -d todoapp-postgres todoapp-redis
 
 env-down:
-	@docker compose down todoapp-postgres
+	@docker compose down todoapp-postgres todoapp-redis
 
 env-cleanup:
 	@bash env-cleanup.sh
@@ -32,12 +32,13 @@ migrate-action:
 		$(action)
 
 migrate-force:
-	docker compose run --rm todoapp-postgres-migrate \
+	@docker compose run --rm todoapp-postgres-migrate \
+		-source file:///migrations \
 		-database postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@todoapp-postgres:5432/${POSTGRES_DB}?sslmode=disable \
-		force 0
+		force $(version)
 
 db-reset:
-	docker compose down -v
+	@docker compose down -v
 	docker compose up -d todoapp-postgres
 
 logs-cleanup:
@@ -46,6 +47,7 @@ logs-cleanup:
 todoapp-run:
 	@export LOGGER_FOLDER=./out/logs && \
 	export POSTGRES_HOST=localhost && \
+	export REDIS_HOST=localhost && \
 	go mod tidy && \
 	go run cmd/todoapp/main.go
 
